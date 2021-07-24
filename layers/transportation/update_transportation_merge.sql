@@ -29,7 +29,8 @@ SELECT (ST_Dump(geometry)).geom AS geometry,
        foot,
        horse,
        mtb_scale,
-       layer
+       layer,
+       rank
 FROM (
          SELECT ST_LineMerge(ST_Collect(geometry)) AS geometry,
                 highway,
@@ -43,10 +44,11 @@ FROM (
                 foot,
                 horse,
                 mtb_scale,
-                layer
+                layer,
+                rank
          FROM osm_highway_linestring_gen_z11
          WHERE ST_IsValid(geometry)
-         GROUP BY highway, construction, network, is_bridge, is_tunnel, is_ford, bicycle, foot, horse, mtb_scale, layer
+         GROUP BY highway, construction, network, is_bridge, is_tunnel, is_ford, bicycle, foot, horse, mtb_scale, layer, rank
      ) AS highway_union
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z11_geometry_idx
@@ -69,7 +71,8 @@ SELECT ST_Simplify(geometry, ZRes(12)) AS geometry,
        foot,
        horse,
        mtb_scale,
-       layer
+       layer,
+       rank
 FROM osm_transportation_merge_linestring_gen_z11
 WHERE highway NOT IN ('tertiary', 'tertiary_link')
       OR highway = 'construction' AND construction NOT IN ('tertiary', 'tertiary_link')
@@ -94,7 +97,8 @@ SELECT ST_Simplify(geometry, ZRes(11)) AS geometry,
        foot,
        horse,
        mtb_scale,
-       layer
+       layer,
+       rank
 FROM osm_transportation_merge_linestring_gen_z10
 WHERE highway NOT IN ('tertiary', 'tertiary_link')
       OR highway = 'construction' AND construction NOT IN ('tertiary', 'tertiary_link')
@@ -114,7 +118,8 @@ SELECT (ST_Dump(geometry)).geom AS geometry,
        is_bridge,
        is_tunnel,
        is_ford,
-       z_order
+       z_order,
+       rank
 FROM (
          SELECT ST_LineMerge(ST_Collect(geometry)) AS geometry,
                 highway,
@@ -123,12 +128,13 @@ FROM (
                 is_bridge,
                 is_tunnel,
                 is_ford,
-                min(z_order) AS z_order
+                min(z_order) AS z_order,
+                rank
          FROM osm_highway_linestring
          WHERE (highway IN ('motorway', 'trunk', 'primary') OR
                 highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary'))
            AND ST_IsValid(geometry)
-         GROUP BY highway, construction, network, is_bridge, is_tunnel, is_ford
+         GROUP BY highway, construction, network, is_bridge, is_tunnel, is_ford, rank
      ) AS highway_union
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_geometry_idx
@@ -146,7 +152,8 @@ SELECT ST_Simplify(geometry, ZRes(10)) AS geometry,
        is_bridge,
        is_tunnel,
        is_ford,
-       z_order
+       z_order,
+       rank
 FROM osm_transportation_merge_linestring
 WHERE highway IN ('motorway', 'trunk', 'primary')
    OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary')
@@ -166,7 +173,8 @@ SELECT ST_Simplify(geometry, ZRes(9)) AS geometry,
        is_bridge,
        is_tunnel,
        is_ford,
-       z_order
+       z_order,
+       rank
 FROM osm_transportation_merge_linestring_gen_z8
 WHERE (highway IN ('motorway', 'trunk', 'primary') OR
        highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary'))
@@ -187,7 +195,8 @@ SELECT ST_Simplify(geometry, ZRes(8)) AS geometry,
        is_bridge,
        is_tunnel,
        is_ford,
-       z_order
+       z_order,
+       rank
 FROM osm_transportation_merge_linestring_gen_z7
 WHERE (highway IN ('motorway', 'trunk') OR highway = 'construction' AND construction IN ('motorway', 'trunk'))
   AND ST_Length(geometry) > 100
@@ -207,7 +216,8 @@ SELECT ST_Simplify(geometry, ZRes(7)) AS geometry,
        is_bridge,
        is_tunnel,
        is_ford,
-       z_order
+       z_order,
+       rank
 FROM osm_transportation_merge_linestring_gen_z6
 WHERE (highway IN ('motorway', 'trunk') OR highway = 'construction' AND construction IN ('motorway', 'trunk'))
   AND ST_Length(geometry) > 500
@@ -227,7 +237,8 @@ SELECT ST_Simplify(geometry, ZRes(6)) AS geometry,
        is_bridge,
        is_tunnel,
        is_ford,
-       z_order
+       z_order,
+       rank
 FROM osm_transportation_merge_linestring_gen_z5
 WHERE (highway = 'motorway' OR highway = 'construction' AND construction = 'motorway')
   AND ST_Length(geometry) > 1000

@@ -117,6 +117,12 @@ layer:
           See more info about [`us-*`](http://wiki.openstreetmap.org/wiki/Road_signs_in_the_United_States),
           [`ca-transcanada`](https://en.wikipedia.org/wiki/Trans-Canada_Highway),
           or [`gb-*`](http://wiki.openstreetmap.org/wiki/United_Kingdom_Tagging_Guidelines#UK_roads).
+    rank:
+      description: |
+          Some road networks have a **rank** to boost their importance on the map. The **rank** field for roads 
+          ranges from `1` to `3` based on the relative importance of the route within a route network
+          (derived from local conventions for route numbering).
+          You can use the **rank** to limit density of highways or emphasize more important roads.
     brunnel:
       description: |
           Mark whether way is a tunnel or bridge.
@@ -180,7 +186,7 @@ layer:
   datasource:
     geometry_field: geometry
     srid: 900913
-    query: (SELECT geometry, class, subclass, network, oneway, ramp, brunnel, service, layer, level, indoor, bicycle, foot, horse, mtb_scale, surface FROM layer_transportation(!bbox!, z(!scale_denominator!))) AS t
+    query: (SELECT geometry, class, subclass, network, rank, oneway, ramp, brunnel, service, layer, level, indoor, bicycle, foot, horse, mtb_scale, surface FROM layer_transportation(!bbox!, z(!scale_denominator!))) AS t
 schema:
   - ./network_type.sql
   - ./class.sql

@@ -77,21 +77,43 @@ CREATE INDEX IF NOT EXISTS osm_route_member_ref_idx ON osm_route_member ("ref");
 
 CREATE INDEX IF NOT EXISTS osm_route_member_network_type_idx ON osm_route_member ("network_type");
 
-ALTER TABLE osm_route_member ADD COLUMN IF NOT EXISTS concurrency_index int;
+CREATE OR REPLACE FUNCTION osm_route_member_rank_us_interstate(ref text) RETURNS int AS
+$$ SELECT CASE
+           WHEN LENGTH(ref) >= 3 THEN 3
+           WHEN ref LIKE '%0' OR ref LIKE '%5' THEN 1
+           ELSE 2 END
+$$ LANGUAGE sql IMMUTABLE PARALLEL SAFE;
 
-INSERT INTO osm_route_member (id, concurrency_index)
+CREATE OR REPLACE FUNCTION osm_route_member_rank(network_type route_network_type, ref text) RETURNS int AS
+$$ SELECT CASE
+           WHEN network_type = 'us-interstate'::route_network_type THEN
+                osm_route_member_rank_us_interstate(
+                     COALESCE(regexp_replace(ref, '[A-Za-z\s]', ''), '')::text
+                )
+           ELSE 1 END
+$$ LANGUAGE sql IMMUTABLE PARALLEL SAFE;
+
+ALTER TABLE osm_route_member ADD COLUMN IF NOT EXISTS concurrency_index int;
+ALTER TABLE osm_route_member ADD COLUMN IF NOT EXISTS rank int;
+
+INSERT INTO osm_route_member (id, concurrency_index, rank)
   SELECT
     id,
-    ROW_NUMBER() over (PARTITION BY member ORDER BY network_type, network, LENGTH(ref), ref) AS concurrency_index
+    ROW_NUMBER() over (PARTITION BY member ORDER BY network_type, network, LENGTH(ref), ref) AS concurrency_index,
+    osm_route_member_rank(network_type, ref) AS rank
   FROM osm_route_member
-  ON CONFLICT (id) DO UPDATE SET concurrency_index = EXCLUDED.concurrency_index;
+  ON CONFLICT (id) DO UPDATE SET concurrency_index = EXCLUDED.concurrency_index, rank = EXCLUDED.rank;
 
+ALTER TABLE osm_highway_linestring ADD COLUMN IF NOT EXISTS rank int;
 UPDATE osm_highway_linestring hl
-  SET network = rm.network_type
+  SET network = rm.network_type,
+      rank = rm.rank
   FROM osm_route_member rm
   WHERE hl.osm_id=rm.member AND rm.concurrency_index=1;
 
+ALTER TABLE osm_highway_linestring_gen_z11 ADD COLUMN IF NOT EXISTS rank int;
 UPDATE osm_highway_linestring_gen_z11 hl
-  SET network = rm.network_type
+  SET network = rm.network_type,
+      rank = rm.rank
   FROM osm_route_member rm
   WHERE hl.osm_id=rm.member AND rm.concurrency_index=1;
