@@ -79,9 +79,8 @@ CREATE INDEX IF NOT EXISTS osm_route_member_network_type_idx ON osm_route_member
 
 CREATE OR REPLACE FUNCTION osm_route_member_rank_us_interstate(ref text) RETURNS int AS
 $$ SELECT CASE
-           WHEN LENGTH(ref) >= 3 THEN 3
-           WHEN ref LIKE '%0' OR ref LIKE '%5' THEN 1
-           ELSE 2 END
+           WHEN LENGTH(ref) >= 3 THEN 2
+           ELSE 1 END
 $$ LANGUAGE sql IMMUTABLE PARALLEL SAFE;
 
 CREATE OR REPLACE FUNCTION osm_route_member_rank(network_type route_network_type, ref text) RETURNS int AS
