@@ -162,8 +162,7 @@ SELECT ST_Simplify(geometry, ZRes(10)) AS geometry,
        z_order,
        rank
 FROM osm_transportation_merge_linestring
-WHERE highway IN ('motorway', 'trunk', 'primary')
-   OR highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary')
+     -- Current view: motorway/trunk/primary
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z8_geometry_idx
     ON osm_transportation_merge_linestring_gen_z8 USING gist (geometry);
@@ -184,9 +183,8 @@ SELECT ST_Simplify(geometry, ZRes(9)) AS geometry,
        z_order,
        rank
 FROM osm_transportation_merge_linestring_gen_z8
-WHERE (highway IN ('motorway', 'trunk', 'primary') OR
-       highway = 'construction' AND construction IN ('motorway', 'trunk', 'primary'))
-  AND ST_Length(geometry) > 50
+     -- Current view: motorway/trunk/primary
+WHERE ST_Length(geometry) > 50
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z7_geometry_idx
     ON osm_transportation_merge_linestring_gen_z7 USING gist (geometry);
@@ -229,8 +227,8 @@ SELECT ST_Simplify(geometry, ZRes(7)) AS geometry,
        z_order,
        rank
 FROM osm_transportation_merge_linestring_gen_z6
-WHERE (highway IN ('motorway', 'trunk') OR highway = 'construction' AND construction IN ('motorway', 'trunk'))
-  AND ST_Length(geometry) > 500
+WHERE ST_Length(geometry) > 500
+     -- Current view: motorway/trunk
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z5_geometry_idx
     ON osm_transportation_merge_linestring_gen_z5 USING gist (geometry);
