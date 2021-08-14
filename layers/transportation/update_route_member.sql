@@ -92,6 +92,9 @@ $$ SELECT CASE
            ELSE 1 END
 $$ LANGUAGE sql IMMUTABLE PARALLEL SAFE;
 
+CREATE INDEX IF NOT EXISTS osm_highway_linestring_osm_id_idx ON osm_highway_linestring ("osm_id");
+CREATE INDEX IF NOT EXISTS osm_highway_linestring_gen_z11_osm_id_idx ON osm_highway_linestring_gen_z11 ("osm_id");
+
 ALTER TABLE osm_route_member ADD COLUMN IF NOT EXISTS concurrency_index int;
 ALTER TABLE osm_route_member ADD COLUMN IF NOT EXISTS rank int;
 
