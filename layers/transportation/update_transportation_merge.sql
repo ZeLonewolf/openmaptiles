@@ -19,7 +19,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z11 AS
 SELECT (ST_Dump(ST_LineMerge(ST_Collect(geometry)))).geom AS geometry,
        NULL::bigint AS osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
@@ -34,7 +33,7 @@ SELECT (ST_Dump(ST_LineMerge(ST_Collect(geometry)))).geom AS geometry,
        rank
 FROM osm_highway_linestring_gen_z11
 -- mapping.yaml pre-filter: motorway/trunk/primary/secondary/tertiary, with _link variants, construction, ST_IsValid()
-GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, bicycle, foot, horse, mtb_scale, layer
+GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, bicycle, foot, horse, mtb_scale, layer, rank
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z11_geometry_idx
     ON osm_transportation_merge_linestring_gen_z11 USING gist (geometry);
@@ -45,7 +44,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z10 AS
 SELECT ST_Simplify(geometry, ZRes(12)) AS geometry,
        osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
@@ -71,7 +69,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z9 AS
 SELECT ST_Simplify(geometry, ZRes(11)) AS geometry,
        osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
@@ -96,7 +93,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z8 AS
 SELECT ST_Simplify(ST_LineMerge(ST_Collect(geometry)), ZRes(10)) AS geometry,
        NULL::bigint AS osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
@@ -108,7 +104,7 @@ FROM osm_transportation_merge_linestring_gen_z9
 WHERE (highway IN ('motorway', 'trunk', 'primary') OR
        construction IN ('motorway', 'trunk', 'primary'))
        AND ST_IsValid(geometry)
-GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford
+GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, rank
     ) /* DELAY_MATERIALIZED_VIEW_CREATION */;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z8_geometry_idx
     ON osm_transportation_merge_linestring_gen_z8 USING gist (geometry);
@@ -119,7 +115,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z7 AS
 SELECT ST_Simplify(geometry, ZRes(9)) AS geometry,
        osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
@@ -140,7 +135,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z6 AS
 SELECT ST_Simplify(geometry, ZRes(8)) AS geometry,
        osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
@@ -161,7 +155,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z5 AS
 SELECT ST_Simplify(geometry, ZRes(7)) AS geometry,
        osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
@@ -182,7 +175,6 @@ CREATE MATERIALIZED VIEW osm_transportation_merge_linestring_gen_z4 AS
 SELECT ST_Simplify(geometry, ZRes(6)) AS geometry,
        osm_id,
        highway,
-       network,
        construction,
        network,
        is_bridge,
