@@ -1,0 +1,85 @@
+generalized_tables:
+
+  # etldoc: osm_border_label_linestring_gen_z6 -> osm_border_label_linestring_gen_z5
+  border_label_linestring_gen_z5:
+    source: border_label_linestring_gen_z6
+    sql_filter: admin_level <= 4
+    tolerance: ZRES6
+
+  # etldoc: osm_border_label_linestring_gen_z7 -> osm_border_label_linestring_gen_z6
+  border_label_linestring_gen_z6:
+    source: border_label_linestring_gen_z7
+    sql_filter: admin_level <= 4
+    tolerance: ZRES7
+
+  # etldoc: osm_border_label_linestring_gen_z8 -> osm_border_label_linestring_gen_z7
+  border_label_linestring_gen_z7:
+    source: border_label_linestring_gen_z8
+    sql_filter: admin_level <= 4
+    tolerance: ZRES8
+
+  # etldoc: osm_border_label_linestring_gen_z9 -> osm_border_label_linestring_gen_z8
+  border_label_linestring_gen_z8:
+    source: border_label_linestring_gen_z9
+    sql_filter: admin_level <= 4
+    tolerance: ZRES9
+
+  # etldoc: osm_border_label_linestring_gen_z10 -> osm_border_label_linestring_gen_z9
+  border_label_linestring_gen_z9:
+    source: border_label_linestring_gen_z10
+    sql_filter: admin_level <= 6
+    tolerance: ZRES10
+
+  # etldoc: osm_border_label_linestring_gen_z11 -> osm_border_label_linestring_gen_z10
+  border_label_linestring_gen_z10:
+    source: border_label_linestring_gen_z11
+    sql_filter: admin_level <= 6
+    tolerance: ZRES11
+
+  # etldoc: osm_border_label_linestring_gen_z12 -> osm_border_label_linestring_gen_z11
+  border_label_linestring_gen_z11:
+    source: border_label_linestring_gen_z12
+    sql_filter: admin_level <= 8
+    tolerance: ZRES12
+
+  # etldoc: osm_border_label_linestring_gen_z13 -> osm_border_label_linestring_gen_z12
+  border_label_linestring_gen_z12:
+    source: border_label_linestring_gen_z13
+    sql_filter: admin_level <= 10
+    tolerance: ZRES13
+
+  # etldoc: osm_border_label_linestring -> osm_border_label_linestring_gen_z13
+  border_label_linestring_gen_z13:
+    source: border_label_linestring
+    sql_filter: admin_level <= 10
+    tolerance: ZRES14
+
+  # etldoc: osm_border_name_relation -> osm_border_label_linestring
+  border_label_linestring:
+    source: border_disp_relation
+    sql_filter: ST_IsValid(geometry) AND admin_level <= 10
+
+tables:
+  # etldoc: imposm3 -> osm_border_name_relation
+  border_name_relation:
+    type: polygon
+    columns:
+    - name: osm_id
+      type: id
+    - name: geometry
+      type: geometry
+    - name: name
+      key: name
+      type: string
+    - name: tags
+      type: hstore_tags
+    - key: admin_level
+      name: admin_level
+      type: integer
+    mapping:
+      type: [boundary]
+    filters:
+      require:
+        boundary: [administrative]
+        admin_level: [__any__]
+        claimed_by: [__any__]
