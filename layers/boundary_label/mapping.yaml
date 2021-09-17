@@ -1,67 +1,67 @@
 generalized_tables:
 
-  # etldoc: osm_border_label_linestring_gen_z6 -> osm_border_label_linestring_gen_z5
-  border_label_linestring_gen_z5:
-    source: border_label_linestring_gen_z6
+  # etldoc: osm_boundary_label_linestring_gen_z6 -> osm_boundary_label_linestring_gen_z5
+  boundary_label_linestring_gen_z5:
+    source: boundary_label_linestring_gen_z6
     sql_filter: admin_level <= 4
     tolerance: ZRES6
 
-  # etldoc: osm_border_label_linestring_gen_z7 -> osm_border_label_linestring_gen_z6
-  border_label_linestring_gen_z6:
-    source: border_label_linestring_gen_z7
+  # etldoc: osm_boundary_label_linestring_gen_z7 -> osm_boundary_label_linestring_gen_z6
+  boundary_label_linestring_gen_z6:
+    source: boundary_label_linestring_gen_z7
     sql_filter: admin_level <= 4
     tolerance: ZRES7
 
-  # etldoc: osm_border_label_linestring_gen_z8 -> osm_border_label_linestring_gen_z7
-  border_label_linestring_gen_z7:
-    source: border_label_linestring_gen_z8
+  # etldoc: osm_boundary_label_linestring_gen_z8 -> osm_boundary_label_linestring_gen_z7
+  boundary_label_linestring_gen_z7:
+    source: boundary_label_linestring_gen_z8
     sql_filter: admin_level <= 4
     tolerance: ZRES8
 
-  # etldoc: osm_border_label_linestring_gen_z9 -> osm_border_label_linestring_gen_z8
-  border_label_linestring_gen_z8:
-    source: border_label_linestring_gen_z9
+  # etldoc: osm_boundary_label_linestring_gen_z9 -> osm_boundary_label_linestring_gen_z8
+  boundary_label_linestring_gen_z8:
+    source: boundary_label_linestring_gen_z9
     sql_filter: admin_level <= 4
     tolerance: ZRES9
 
-  # etldoc: osm_border_label_linestring_gen_z10 -> osm_border_label_linestring_gen_z9
-  border_label_linestring_gen_z9:
-    source: border_label_linestring_gen_z10
+  # etldoc: osm_boundary_label_linestring_gen_z10 -> osm_boundary_label_linestring_gen_z9
+  boundary_label_linestring_gen_z9:
+    source: boundary_label_linestring_gen_z10
     sql_filter: admin_level <= 6
     tolerance: ZRES10
 
-  # etldoc: osm_border_label_linestring_gen_z11 -> osm_border_label_linestring_gen_z10
-  border_label_linestring_gen_z10:
-    source: border_label_linestring_gen_z11
+  # etldoc: osm_boundary_label_linestring_gen_z11 -> osm_boundary_label_linestring_gen_z10
+  boundary_label_linestring_gen_z10:
+    source: boundary_label_linestring_gen_z11
     sql_filter: admin_level <= 6
     tolerance: ZRES11
 
-  # etldoc: osm_border_label_linestring_gen_z12 -> osm_border_label_linestring_gen_z11
-  border_label_linestring_gen_z11:
-    source: border_label_linestring_gen_z12
+  # etldoc: osm_boundary_label_linestring_gen_z12 -> osm_boundary_label_linestring_gen_z11
+  boundary_label_linestring_gen_z11:
+    source: boundary_label_linestring_gen_z12
     sql_filter: admin_level <= 8
     tolerance: ZRES12
 
-  # etldoc: osm_border_label_linestring_gen_z13 -> osm_border_label_linestring_gen_z12
-  border_label_linestring_gen_z12:
-    source: border_label_linestring_gen_z13
+  # etldoc: osm_boundary_label_linestring_gen_z13 -> osm_boundary_label_linestring_gen_z12
+  boundary_label_linestring_gen_z12:
+    source: boundary_label_linestring_gen_z13
     sql_filter: admin_level <= 10
     tolerance: ZRES13
 
-  # etldoc: osm_border_label_linestring -> osm_border_label_linestring_gen_z13
-  border_label_linestring_gen_z13:
-    source: border_label_linestring
+  # etldoc: osm_boundary_label_linestring -> osm_boundary_label_linestring_gen_z13
+  boundary_label_linestring_gen_z13:
+    source: boundary_label_linestring
     sql_filter: admin_level <= 10
     tolerance: ZRES14
 
-  # etldoc: osm_border_name_relation -> osm_border_label_linestring
-  border_label_linestring:
-    source: border_disp_relation
+  # etldoc: osm_boundary_name_relation -> osm_boundary_label_linestring
+  boundary_label_linestring:
+    source: boundary_name_relation
     sql_filter: ST_IsValid(geometry) AND admin_level <= 10
 
 tables:
-  # etldoc: imposm3 -> osm_border_name_relation
-  border_name_relation:
+  # etldoc: imposm3 -> osm_boundary_name_relation
+  boundary_name_relation:
     type: polygon
     columns:
     - name: osm_id

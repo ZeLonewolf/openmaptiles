@@ -14,8 +14,11 @@ layer:
         Area name on the inside of the border.
   buffer_size: 4
   datasource:
+    key_field: osm_id
+    key_field_as_attribute: no
     geometry_field: geometry
-    query: (SELECT geometry, boundary, admin_level, name, {name_languages} FROM layer_boundary_label(!bbox!, z(!scale_denominator!))) AS t
+    srid: 900913
+    query: (SELECT osm_id, geometry, admin_level, name, {name_languages} FROM layer_boundary_label(!bbox!, z(!scale_denominator!))) AS t
 schema:
   - ./boundary_label.sql
 datasources:
