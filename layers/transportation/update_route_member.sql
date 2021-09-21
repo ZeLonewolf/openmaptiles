@@ -101,7 +101,7 @@ ALTER TABLE osm_route_member ADD COLUMN IF NOT EXISTS rank int;
 INSERT INTO osm_route_member (id, concurrency_index, rank)
   SELECT
     id,
-    ROW_NUMBER() over (PARTITION BY member ORDER BY network_type, network, LENGTH(ref), ref) AS concurrency_index,
+    DENSE_RANK() over (PARTITION BY member ORDER BY network_type, network, LENGTH(ref), ref) AS concurrency_index,
     osm_route_member_rank(network_type, ref) AS rank
   FROM osm_route_member
   ON CONFLICT (id) DO UPDATE SET concurrency_index = EXCLUDED.concurrency_index, rank = EXCLUDED.rank;
