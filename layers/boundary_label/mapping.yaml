@@ -63,23 +63,29 @@ tables:
   # etldoc: imposm3 -> osm_boundary_name_relation
   boundary_name_relation:
     type: polygon
+    filters:
+      require:
+        type: [boundary]
+        boundary: [administrative]
+        admin_level: [__any__]
+    mapping:
+      type:
+      - boundary
+      boundary:
+      - administrative
     columns:
     - name: osm_id
       type: id
     - name: geometry
-      type: geometry
+      type: validated_geometry
     - name: name
       key: name
+      type: string
+    - name: boundary
+      key: boundary
       type: string
     - name: tags
       type: hstore_tags
     - key: admin_level
       name: admin_level
       type: integer
-    mapping:
-      type: [boundary]
-    filters:
-      require:
-        boundary: [administrative]
-        admin_level: [__any__]
-        claimed_by: [__any__]

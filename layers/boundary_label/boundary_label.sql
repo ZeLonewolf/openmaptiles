@@ -20,7 +20,7 @@ SELECT osm_id,
 FROM (
          -- etldoc: osm_boundary_label_linestring_gen_z5 -> layer_boundary_label:z5
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -31,7 +31,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -42,7 +42,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -53,7 +53,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -64,7 +64,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -75,7 +75,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -86,7 +86,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -97,7 +97,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
@@ -108,7 +108,7 @@ FROM (
          UNION ALL
 
          SELECT osm_id,
-                geometry,
+                ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
                 tags
