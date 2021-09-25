@@ -23,7 +23,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z5
          WHERE zoom_level = 5
            AND geometry && bbox
@@ -34,7 +34,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z6
          WHERE zoom_level = 6
            AND geometry && bbox
@@ -45,7 +45,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z7
          WHERE zoom_level = 7
            AND geometry && bbox
@@ -56,7 +56,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z8
          WHERE zoom_level = 8
            AND geometry && bbox
@@ -67,7 +67,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z9
          WHERE zoom_level = 9
            AND geometry && bbox
@@ -78,7 +78,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z10
          WHERE zoom_level = 10
            AND geometry && bbox
@@ -89,7 +89,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z11
          WHERE zoom_level = 11
            AND geometry && bbox
@@ -100,7 +100,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z12
          WHERE zoom_level = 12
            AND geometry && bbox
@@ -111,7 +111,7 @@ FROM (
                 ST_Boundary(ST_ForceRHR(geometry)) AS geometry,
                 admin_level,
                 name,
-                tags
+                slice_language_tags(tags) AS tags
          FROM osm_boundary_label_linestring_gen_z13
          WHERE zoom_level >= 13
            AND geometry && bbox
