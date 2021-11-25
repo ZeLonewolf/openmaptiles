@@ -430,6 +430,8 @@ tables:
     - *ref
     - *network
     - *name
+    - *name_en
+    - *name_de
     - name: osmc_symbol
       key: osmc:symbol
       type: string

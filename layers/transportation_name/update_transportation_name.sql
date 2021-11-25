@@ -269,7 +269,12 @@ BEGIN
     FROM (
         SELECT hl.geometry,
             hl.osm_id,
-            transportation_name_tags(hl.geometry, hl.tags, hl.name, hl.name_en, hl.name_de) AS tags,
+            transportation_name_tags(hl.geometry,
+                                     hl.tags,
+                                     COALESCE(NULLIF(hl.name, ''), NULLIF(rm1.name, '')),
+                                     COALESCE(NULLIF(hl.name_en, ''), NULLIF(rm1.name_en, '')),
+                                     COALESCE(NULLIF(hl.name_de, ''), NULLIF(rm1.name_de, ''))
+                                    ) AS tags,
             rm1.network_type,
             CASE
                 WHEN rm1.network_type IS NOT NULL AND rm1.ref::text <> ''
