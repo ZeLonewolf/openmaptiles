@@ -119,9 +119,34 @@ layer:
     network:
       description: |
           The network type derived mainly from [`network`](http://wiki.openstreetmap.org/wiki/Key:network) tag of the road.
-          See more info about [`us-*`](http://wiki.openstreetmap.org/wiki/Road_signs_in_the_United_States),
-          [`ca-transcanada`](https://en.wikipedia.org/wiki/Trans-Canada_Highway),
-          or [`gb-*`](http://wiki.openstreetmap.org/wiki/United_Kingdom_Tagging_Guidelines#UK_roads).
+          See more info about [road route relations](https://wiki.openstreetmap.org/wiki/Relation:route#Road_routes).
+      values:
+      - ar-national
+      - at-motorway
+      - ba-national
+      - ca-transcanada
+      - es-motorway
+      - fr-national
+      - gb-motorway
+      - gb-trunk
+      - gh-national
+      - it-national
+      - jp-national
+      - lv-national
+      - mk-motorway
+      - nl-motorway
+      - ph-national
+      - pl-national
+      - ro-national
+      - ru-national
+      - si-national
+      - sk-national
+      - ua-national
+      - us-interstate
+      - us-highway
+      - us-state
+      - za-national
+      - road (default)
     brunnel:
       description: |
           Mark whether way is a tunnel or bridge.

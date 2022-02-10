@@ -25,13 +25,33 @@ FROM gbr_route_members_view;
 CREATE OR REPLACE FUNCTION osm_route_member_network_type(network text) RETURNS route_network_type AS
 $$
 SELECT CASE
-           WHEN network = 'US:I' THEN 'us-interstate'::route_network_type
-           WHEN network = 'US:US' THEN 'us-highway'::route_network_type
-           WHEN network LIKE 'US:__' THEN 'us-state'::route_network_type
+           WHEN network = 'AR:national' THEN 'ar-national'::route_network_type
+           WHEN network = 'AT:A-road' THEN 'at-motorway'::route_network_type
+           WHEN network = 'ba:Autoceste' THEN 'ba-national'::route_network_type
            -- https://en.wikipedia.org/wiki/Trans-Canada_Highway
            WHEN network LIKE 'CA:transcanada%' THEN 'ca-transcanada'::route_network_type
            WHEN network = 'omt-gb-motorway' THEN 'gb-motorway'::route_network_type
            WHEN network = 'omt-gb-trunk' THEN 'gb-trunk'::route_network_type
+           WHEN network = 'GH:national' THEN 'gh-national'::route_network_type
+           WHEN network = 'ES:A-road' THEN 'es-motorway'::route_network_type
+           WHEN network = 'FR:A-road' THEN 'fr-national'::route_network_type
+           WHEN network = 'GH:national' THEN 'gh-national'::route_network_type
+           WHEN network = 'A-road' THEN 'it-national'::route_network_type
+           WHEN network = 'JP:national' THEN 'jp-national'::route_network_type
+           WHEN network = 'lv:national' THEN 'lv-national'::route_network_type
+           WHEN network = 'mk:national' THEN 'mk-motorway'::route_network_type
+           WHEN network = 'NL:A' THEN 'nl-motorway'::route_network_type
+           WHEN network = 'ph:nhn' THEN 'ph-national'::route_network_type
+           WHEN network = 'pl:national' THEN 'pl-national'::route_network_type
+           WHEN network = 'RO:A' THEN 'ro-national'::route_network_type
+           WHEN network = 'ru:national' THEN 'ru-national'::route_network_type
+           WHEN network = 'SI:AC' THEN 'si-national'::route_network_type
+           WHEN network = 'sk:national' THEN 'sk-national'::route_network_type
+           WHEN network = 'ua:national' THEN 'ua-national'::route_network_type
+           WHEN network = 'US:I' THEN 'us-interstate'::route_network_type
+           WHEN network = 'US:US' THEN 'us-highway'::route_network_type
+           WHEN network LIKE 'US:__' THEN 'us-state'::route_network_type
+           WHEN network = 'za:national' THEN 'za-national'::route_network_type
            END;
 $$ LANGUAGE sql IMMUTABLE
                 PARALLEL SAFE;

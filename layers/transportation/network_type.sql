@@ -12,9 +12,29 @@ $$
     BEGIN
         IF NOT EXISTS(SELECT 1 FROM pg_type WHERE typname = 'route_network_type') THEN
             CREATE TYPE route_network_type AS enum (
-                'us-interstate', 'us-highway', 'us-state',
+                'ar-national',
+                'at-motorway',
+                'ba-national',
                 'ca-transcanada',
-                'gb-motorway', 'gb-trunk'
+                'es-motorway',
+                'fr-national',
+                'gb-motorway', 'gb-trunk',
+                'gh-national',
+                'gr-national',
+                'it-national',
+                'jp-national',
+                'lv-national',
+                'mk-motorway',
+                'nl-motorway',
+                'ph-national',
+                'pl-national',
+                'ro-national',
+                'ru-national',
+                'si-national',
+                'sk-national',
+                'ua-national',
+                'us-interstate', 'us-highway', 'us-state',
+                'za-national'
                 );
         END IF;
     END
