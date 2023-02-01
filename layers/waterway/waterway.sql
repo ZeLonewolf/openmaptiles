@@ -323,6 +323,7 @@ CREATE OR REPLACE FUNCTION layer_waterway(bbox geometry, zoom_level int)
                 name         text,
                 name_en      text,
                 name_de      text,
+                iso_a2       text,
                 brunnel      text,
                 intermittent int,
                 tags         hstore
@@ -334,6 +335,7 @@ SELECT geometry,
        NULLIF(name, '') AS name,
        COALESCE(NULLIF(name_en, ''), NULLIF(name, '')) AS name_en,
        COALESCE(NULLIF(name_de, ''), NULLIF(name, ''), NULLIF(name_en, '')) AS name_de,
+       han_unification_country_code(geometry) AS iso_a2,
        waterway_brunnel(is_bridge, is_tunnel) AS brunnel,
        is_intermittent::int AS intermittent,
        tags

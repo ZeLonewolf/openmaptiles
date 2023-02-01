@@ -1,16 +1,3 @@
--- Create bounding windows for country-specific processing
-
--- etldoc: ne_10m_admin_0_countries ->  ne_10m_admin_0_gb_buffer
-CREATE TABLE IF NOT EXISTS ne_10m_admin_0_gb_buffer AS
-SELECT ST_Buffer(geometry, 10000)
-FROM ne_10m_admin_0_countries
-WHERE iso_a2 = 'GB';
-
--- etldoc: ne_10m_admin_0_countries ->  ne_10m_admin_0_ie_buffer
-CREATE TABLE IF NOT EXISTS ne_10m_admin_0_ie_buffer AS
-SELECT ST_Buffer(geometry, 10000)
-FROM ne_10m_admin_0_countries
-WHERE iso_a2 = 'IE';
 
 -- Assign pseudo-networks based highway classification
 -- etldoc:  osm_highway_linestring ->  gbr_route_members_view

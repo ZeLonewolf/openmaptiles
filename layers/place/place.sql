@@ -73,7 +73,7 @@ FROM (
              place::text AS class,
              "rank",
              NULL::int AS capital,
-             NULL::text AS iso_a2
+             han_unification_country_code(geometry) AS iso_a2
          FROM osm_state_point
          WHERE geometry && bbox
            AND name <> ''
@@ -92,7 +92,7 @@ FROM (
              'island' AS class,
              7 AS "rank",
              NULL::int AS capital,
-             NULL::text AS iso_a2
+             han_unification_country_code(geometry) AS iso_a2
          FROM osm_island_point
          WHERE zoom_level >= 12
            AND geometry && bbox
@@ -111,7 +111,7 @@ FROM (
              'island' AS class,
              island_rank(area) AS "rank",
              NULL::int AS capital,
-             NULL::text AS iso_a2
+             han_unification_country_code(geometry) AS iso_a2
          FROM osm_island_polygon
          WHERE geometry && bbox
            AND ((zoom_level = 8 AND island_rank(area) <= 3)
@@ -134,7 +134,7 @@ FROM (
              place::text AS class,
              "rank",
              capital,
-             NULL::text AS iso_a2
+             han_unification_country_code(geometry) AS iso_a2
          FROM layer_city(bbox, zoom_level, pixel_width)
          ORDER BY "rank" ASC
      ) AS place_all

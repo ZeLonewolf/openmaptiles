@@ -22,6 +22,7 @@ layer:
         The `name` field may be empty for NaturalEarth data or at lower zoom levels.
     name_en: English name `name:en` if available, otherwise `name`.
     name_de: German name `name:de` if available, otherwise `name` or `name:en`.
+    iso_a2: Two-letter country code [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) for Han unification countries.
     class:
       description: |
         The original value of the [`waterway`](http://wiki.openstreetmap.org/wiki/Key:waterway) tag.
@@ -43,8 +44,9 @@ layer:
       values: [0, 1]
   datasource:
     geometry_field: geometry
-    query: (SELECT geometry, name, name_en, name_de, {name_languages}, class, brunnel, intermittent FROM layer_waterway(!bbox!, z(!scale_denominator!))) AS t
+    query: (SELECT geometry, name, name_en, name_de, {name_languages}, iso_a2, class, brunnel, intermittent FROM layer_waterway(!bbox!, z(!scale_denominator!))) AS t
 schema:
+  - ../country_code.sql
   - ./update_waterway_linestring.sql
   - ./update_important_waterway.sql
   - ./waterway.sql
