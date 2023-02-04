@@ -20,7 +20,7 @@ WHERE iso_a2 IN ('GB', 'IE');
 
 CREATE INDEX IF NOT EXISTS ne_10m_admin_0_buffer_cc_idx ON ne_10m_admin_0_nobuffer(iso_a2);
 
--- etldoc: osm_aerodrome_label_point -> osm_aerodrome_label_point
+-- etldoc: ne_10m_admin_0_nobuffer -> han_unification_country_code
 CREATE OR REPLACE FUNCTION han_unification_country_code(g geometry) RETURNS text AS
 $$  SELECT CASE
       WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='HK')) THEN 'HK'
