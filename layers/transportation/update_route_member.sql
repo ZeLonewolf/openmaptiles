@@ -1,7 +1,7 @@
 
 -- Assign pseudo-networks based highway classification
 -- etldoc:  osm_highway_linestring ->  gbr_route_members_view
--- etldoc:  ne_10m_admin_0_gb_buffer ->  gbr_route_members_view
+-- etldoc:  ne_10m_admin_0_buffer ->  gbr_route_members_view
 CREATE OR REPLACE VIEW gbr_route_members_view AS
 SELECT 0,
        osm_id,
@@ -12,12 +12,12 @@ SELECT 0,
             WHEN highway IN ('primary','secondary') THEN 'omt-gb-primary' END AS network
 FROM osm_highway_linestring
 WHERE length(ref) > 1
-  AND ST_Intersects(geometry, (SELECT * FROM ne_10m_admin_0_gb_buffer))
+  AND ST_Intersects(geometry, (SELECT geometry FROM ne_10m_admin_0_buffer WHERE iso_a2='GB'))
   AND highway IN ('motorway', 'trunk', 'primary', 'secondary')
 ;
 
 -- etldoc:  osm_highway_linestring ->  ire_route_members_view
--- etldoc:  ne_10m_admin_0_ie_buffer ->  ire_route_members_view
+-- etldoc:  ne_10m_admin_0_buffer ->  ire_route_members_view
 CREATE OR REPLACE VIEW ire_route_members_view AS
 SELECT 0,
        osm_id,
@@ -28,7 +28,7 @@ SELECT 0,
             ELSE 'omt-ie-regional' END AS network
 FROM osm_highway_linestring
 WHERE length(ref) > 1
-  AND ST_Intersects(geometry, (SELECT * FROM ne_10m_admin_0_ie_buffer))
+  AND ST_Intersects(geometry, (SELECT geometry FROM ne_10m_admin_0_buffer WHERE iso_a2='IE'))
   AND highway IN ('motorway', 'trunk', 'primary', 'secondary', 'unclassified')
 ;
 
