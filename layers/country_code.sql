@@ -26,13 +26,13 @@ $$  SELECT CASE
       WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='HK')) THEN 'HK'
       WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='CN-TW')) THEN 'TW'
       WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='CN')) THEN 'CN'
-      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer)) THEN 'JP'
-      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer)) THEN 'KR'
-      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer)) THEN 'VN'
-      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer)) THEN 'KP'
-      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer)) THEN 'MO'
-      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer)) THEN 'MS'
-      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer)) THEN 'SG'
+      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='JP')) THEN 'JP'
+      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='KR')) THEN 'KR'
+      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='VN')) THEN 'VN'
+      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='KP')) THEN 'KP'
+      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='MO')) THEN 'MO'
+      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='MS')) THEN 'MS'
+      WHEN ST_Intersects(g, (SELECT geometry FROM ne_10m_admin_0_nobuffer WHERE iso_a2='SG')) THEN 'SG'
     END
 $$ LANGUAGE SQL;
 
