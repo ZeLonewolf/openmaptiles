@@ -105,7 +105,7 @@ JOIN osm_shipway_linestring_clustered oslc2 ON osc2.osm_id = oslc2.osm_id;
 CREATE MATERIALIZED VIEW osm_shipway_linestring_multi_isect AS
 SELECT
   osm_id,
-  ST_Union(isect) AS multioverlap
+  ST_CollectionExtract(ST_Union(isect),2) AS multioverlap
 FROM (
   SELECT
     osm_id1 AS osm_id,
@@ -127,7 +127,7 @@ GROUP BY osm_id;
 -- etldoc: osm_shipway_linestring_isect -> osm_shipway_linestring_parts
 CREATE MATERIALIZED VIEW osm_shipway_linestring_parts AS
 SELECT
-  geometry,
+  ST_CollectionExtract(geometry) AS geometry,
   max_length
 FROM (
   SELECT
@@ -148,8 +148,9 @@ WHERE ST_Length(geometry) > 0;
 CREATE MATERIALIZED VIEW osm_shipway_linestring_gen_z12_skeleton AS
 SELECT
   geometry,
-  max_length
-FROM osm_shipway_linestring_parts;
+  MAX(max_length) AS max_length
+FROM osm_shipway_linestring_parts
+GROUP BY geometry;
 
 -- etldoc: osm_shipway_linestring_gen_z12 -> osm_shipway_linestring_gen_z11
 CREATE MATERIALIZED VIEW osm_shipway_linestring_gen_z11 AS
