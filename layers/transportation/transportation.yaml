@@ -214,6 +214,7 @@ schema:
   - ./highway_name.sql
   - ./update_route_member.sql
   - ./update_transportation_merge.sql
+  - ./update_ferry.sql
   - ./transportation.sql
 datasources:
   - type: imposm3

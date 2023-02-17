@@ -938,7 +938,7 @@ FROM (
          WHERE zoom_level = 11
          UNION ALL
 
-         -- etldoc: osm_shipway_linestring_gen_z12  ->  layer_transportation:z12
+         -- etldoc: osm_shipway_linestring_gen_z12_clustered  ->  layer_transportation:z12
          SELECT osm_id,
                 geometry,
                 NULL AS highway,
@@ -967,7 +967,7 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 z_order
-         FROM osm_shipway_linestring_gen_z12
+         FROM osm_shipway_linestring_gen_z12_clustered
          WHERE zoom_level = 12
          UNION ALL
 
