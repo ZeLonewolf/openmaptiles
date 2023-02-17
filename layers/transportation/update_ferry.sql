@@ -93,15 +93,12 @@ SELECT DISTINCT
   osc1.osm_id AS osm_id1,
   osc2.osm_id AS osm_id2,
   ST_Intersection(oslc1.geometry, oslc2.geometry) AS isect,
-  GREATEST(ST_Length(osl1.geometry),
-           ST_Length(osl2.geometry)) AS max_length
+  GREATEST(ST_Length(oslc1.geometry),
+           ST_Length(oslc2.geometry)) AS max_length
 FROM osm_shipway_clustered osc1
 JOIN osm_shipway_clustered osc2 ON osc1.cid = osc2.cid AND osc1.osm_id < osc2.osm_id
 JOIN osm_shipway_linestring_clustered oslc1 ON osc1.osm_id = oslc1.osm_id
-JOIN osm_shipway_linestring_clustered oslc2 ON osc2.osm_id = oslc2.osm_id
-JOIN osm_shipway_linestring_gen_z12 osl1 ON osl1.osm_id = osc1.osm_id
-JOIN osm_shipway_linestring_gen_z12 osl2 ON osl2.osm_id = osc2.osm_id;
-
+JOIN osm_shipway_linestring_clustered oslc2 ON osc2.osm_id = oslc2.osm_id;
 
 -- Step 8: Get all overlap segments associated with a ferry route
 -- etldoc:  osm_shipway_linestring_isect -> osm_shipway_linestring_multi_isect
