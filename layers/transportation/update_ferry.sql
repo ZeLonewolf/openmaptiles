@@ -76,16 +76,13 @@ FROM
 GROUP BY osm_id, pt;
 
 -- Step 6: Re-assemble linestrings with the new point positions
--- etldoc: osm_shipway_linestring_gen_z12 -> osm_shipway_linestring_clustered
 -- etldoc: osm_shipway_cluster_coalesced -> osm_shipway_linestring_clustered
 CREATE MATERIALIZED VIEW osm_shipway_linestring_clustered AS
 SELECT 
-  oscc.osm_id AS osm_id,
+  osm_id,
   ST_MakeLine(pt order by ptidx) AS geometry
 FROM osm_shipway_cluster_coalesced oscc
-LEFT OUTER JOIN osm_shipway_linestring_gen_z12 osl
-  ON oscc.osm_id = osl.osm_id
-GROUP BY oscc.osm_id;
+GROUP BY osm_id;
 
 -- Step 7: Iterate through each pair of ferry lines that have shared segments
 --   and compute the portion that intersects
@@ -143,7 +140,7 @@ FROM (
   JOIN osm_shipway_linestring_multi_isect isect ON oslc.osm_id = isect.osm_id
   UNION ALL
   SELECT
-    isect AS geometry,
+    DISTINCT isect AS geometry,
     max_length
   FROM osm_shipway_linestring_isect
   WHERE max_length > 0
