@@ -428,6 +428,7 @@ tables:
     mapping:
       highway:
       - motorway_junction
+      - traffic_signals
 
 # TODO: Future table for joining networks
 # etldoc: imposm3 -> osm_route_member

@@ -97,6 +97,8 @@ layer:
           __AND__:
             highway: construction
             construction: raceway
+        traffic_signals:
+          highway: traffic_signals
     subclass:
       description: |
           Distinguish more specific classes of railway and path:

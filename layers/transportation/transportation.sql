@@ -818,6 +818,38 @@ FROM (
                  man_made IN ('bridge', 'pier')
                  OR (is_area AND COALESCE(layer, 0) >= 0)
              )
+         UNION ALL
+         -- etldoc: osm_highway_point ->  layer_transportation:z14
+         SELECT osm_id,
+                geometry,
+                highway,
+                NULL AS construction,
+                NULL AS network,
+                NULL AS railway,
+                NULL AS aerialway,
+                NULL AS shipway,
+                NULL AS public_transport,
+                NULL AS service,
+                NULL::text AS access,
+                NULL::boolean AS toll,
+                NULL AS is_bridge,
+                NULL AS is_tunnel,
+                NULL AS is_ford,
+                NULL::boolean AS expressway,
+                NULL AS is_ramp,
+                NULL::int AS is_oneway,
+                NULL AS man_made,
+                NULL AS layer,
+                NULL::int AS level,
+                NULL::boolean AS indoor,
+                NULL AS bicycle,
+                NULL AS foot,
+                NULL AS horse,
+                NULL AS mtb_scale,
+                NULL AS surface,
+                NULL AS z_order
+         FROM osm_highway_point p
+         WHERE highway = 'traffic_signals' AND zoom_level >= 14
      ) AS zoom_levels
 WHERE geometry && bbox
 ORDER BY z_order ASC;
