@@ -7,10 +7,8 @@ DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_gen_z9;
 DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_gen_z10;
 DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_gen_z11;
 DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_gen_z12_skeleton;
-DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_parts;
-DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_multi_isect;
-DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_isect;
-DROP MATERIALIZED VIEW IF EXISTS osm_shipway_linestring_clustered;
+DROP MATERIALIZED VIEW IF EXISTS osm_shipway_distinct_segments;
+DROP MATERIALIZED VIEW IF EXISTS osm_shipway_segment_tuples;
 DROP MATERIALIZED VIEW IF EXISTS osm_shipway_cluster_coalesced;
 DROP MATERIALIZED VIEW IF EXISTS osm_shipway_cluster_centroid;
 DROP MATERIALIZED VIEW IF EXISTS osm_shipway_clustered;
@@ -27,25 +25,31 @@ SELECT
   ST_DumpPoints(geometry) AS dp,
   name
 FROM osm_shipway_linestring_gen_z12;
+CREATE INDEX IF NOT EXISTS osm_shipway_dumppoints_id ON osm_shipway_dumppoints (osm_id);
 
 -- Step 2: Extract point geometry and point position in the linestring
 -- etldoc: osm_shipway_dumppoints -> osm_shipway_explode
 CREATE MATERIALIZED VIEW osm_shipway_explode AS
 SELECT
   osm_id,
-  (dp).geom AS pt,
+  -- Ensure clustering is done in WebMercator
+  ST_Transform((dp).geom, 3857) AS pt,
   (dp).path[1] As ptidx
 FROM osm_shipway_dumppoints;
+CREATE INDEX IF NOT EXISTS osm_shipway_explode_pt ON osm_shipway_explode USING gist (pt);
 
 -- Step 3: Cluster groups of nearby points
 -- etldoc: osm_shipway_explode -> osm_shipway_clustered
 CREATE MATERIALIZED VIEW osm_shipway_clustered AS	
 SELECT
-  osm_id,
+  ose.osm_id AS osm_id,
   pt,
   ptidx,
-  ST_ClusterDBSCAN(pt, eps := 1000, minpoints := 2) over () AS cid
-FROM osm_shipway_explode;
+  ST_ClusterDBSCAN(pt, eps := 200, minpoints := 2) over () AS cid,
+  ST_Length(geometry) AS route_length
+FROM osm_shipway_explode ose
+JOIN osm_shipway_linestring_gen_z12 osl ON ose.osm_id = osl.osm_id;
+CREATE INDEX IF NOT EXISTS osm_shipway_clustered_cid ON osm_shipway_clustered (cid);
   
 -- Step 4: Compute center point of each cluster of points
 -- etldoc: osm_shipway_clustered -> osm_shipway_cluster_centroid
@@ -56,14 +60,15 @@ SELECT
 FROM osm_shipway_clustered
 WHERE cid IS NOT NULL
 GROUP BY cid;
+CREATE INDEX IF NOT EXISTS osm_shipway_cluster_centroid ON osm_shipway_cluster_centroid (cid);
 
 -- Step 5: Replace all clustered points with a centroid point
 -- etldoc: osm_shipway_cluster_centroid -> osm_shipway_cluster_coalesced
 CREATE MATERIALIZED VIEW osm_shipway_cluster_coalesced AS
 SELECT
-  osm_id,
-  pt,
-  MIN(ptidx) as ptidx
+  ioscc.osm_id AS osm_id,
+  ioscc.pt AS pt,
+  MIN(ioscc.ptidx) AS ptidx
 FROM
 (
   SELECT
@@ -72,85 +77,48 @@ FROM
     ptidx
   FROM osm_shipway_clustered cl
   LEFT OUTER JOIN osm_shipway_cluster_centroid clctr ON cl.cid = clctr.cid
-) inner_osm_shipway_cluster_coalesced
-GROUP BY osm_id, pt;
+) ioscc
+JOIN osm_shipway_clustered osc ON osc.osm_id = ioscc.osm_id
+GROUP BY ioscc.osm_id, ioscc.pt;
 
--- Step 6: Re-assemble linestrings with the new point positions
--- etldoc: osm_shipway_cluster_coalesced -> osm_shipway_linestring_clustered
-CREATE MATERIALIZED VIEW osm_shipway_linestring_clustered AS
-SELECT 
-  osm_id,
-  ST_MakeLine(pt order by ptidx) AS geometry
-FROM osm_shipway_cluster_coalesced oscc
-GROUP BY osm_id;
-
--- Step 7: Iterate through each pair of ferry lines that have shared segments
---   and compute the portion that intersects
--- etldoc: osm_shipway_clustered -> osm_shipway_linestring_isect
--- etldoc: osm_shipway_linestring_clustered -> osm_shipway_linestring_isect
-CREATE MATERIALIZED VIEW osm_shipway_linestring_isect AS
-SELECT DISTINCT
-  osc1.osm_id AS osm_id1,
-  osc2.osm_id AS osm_id2,
-  ST_Intersection(oslc1.geometry, oslc2.geometry) AS isect,
-  GREATEST(ST_Length(oslc1.geometry),
-           ST_Length(oslc2.geometry)) AS max_length
-FROM osm_shipway_clustered osc1
-JOIN osm_shipway_clustered osc2 ON osc1.cid = osc2.cid AND osc1.osm_id < osc2.osm_id
-JOIN osm_shipway_linestring_clustered oslc1 ON osc1.osm_id = oslc1.osm_id
-JOIN osm_shipway_linestring_clustered oslc2 ON osc2.osm_id = oslc2.osm_id;
-
--- Step 8: Get all overlap segments associated with a ferry route
--- etldoc:  osm_shipway_linestring_isect -> osm_shipway_linestring_multi_isect
-CREATE MATERIALIZED VIEW osm_shipway_linestring_multi_isect AS
+-- Step 6: Assemble two-point line segments
+-- etldoc: osm_shipway_cluster_coalesced -> osm_shipway_segment_tuples
+CREATE MATERIALIZED VIEW osm_shipway_segment_tuples AS
 SELECT
   osm_id,
-  ST_CollectionExtract(ST_Union(isect),2) AS multioverlap
+  ST_MakeLine(pt1, pt2) AS segment
 FROM (
   SELECT
-    osm_id1 AS osm_id,
-    isect
-  FROM osm_shipway_linestring_isect
-  WHERE ST_Length(isect) > 1 -- 1 meter rounding factor
-  UNION ALL
-  SELECT
-    osm_id2 AS osm_id,
-    isect
-  FROM osm_shipway_linestring_isect
-  WHERE ST_Length(isect) > 1 -- 1 meter rounding factor
-  ) overlap_subquery
-GROUP BY osm_id;
+    osm_id, 
+    ptidx,
+    pt AS pt1, 
+    lead(pt) OVER (
+      PARTITION BY osm_id
+      ORDER BY ptidx
+    ) AS pt2
+  FROM osm_shipway_cluster_coalesced
+) osm_shipway_cluster_segment_endpoints
+WHERE pt2 IS NOT NULL;
 
--- Step 9: Collect the intersection and difference segments
--- etldoc: osm_shipway_linestring_clustered -> osm_shipway_linestring_parts
--- etldoc: osm_shipway_linestring_multi_isect -> osm_shipway_linestring_parts
--- etldoc: osm_shipway_linestring_isect -> osm_shipway_linestring_parts
-CREATE MATERIALIZED VIEW osm_shipway_linestring_parts AS
+-- Step 7: Discard duplicate sections belonging to shorter routes
+-- etldoc: osm_shipway_segment_tuples -> osm_shipway_distinct_segments
+-- etldoc: osm_shipway_clustered -> osm_shipway_distinct_segments
+CREATE MATERIALIZED VIEW osm_shipway_distinct_segments AS
 SELECT
-  ST_CollectionExtract(geometry) AS geometry,
-  max_length
-FROM (
-  SELECT
-    ST_Difference(geometry, multioverlap) AS geometry,
-    ST_Length(geometry) AS max_length
-  FROM osm_shipway_linestring_clustered oslc
-  JOIN osm_shipway_linestring_multi_isect isect ON oslc.osm_id = isect.osm_id
-  UNION ALL
-  SELECT
-    DISTINCT isect AS geometry,
-    max_length
-  FROM osm_shipway_linestring_isect
-  WHERE max_length > 0
-) shipway_parts_bin
-WHERE ST_Length(geometry) > 0;
+  segment,
+  MAX(osc.route_length) AS route_length
+FROM osm_shipway_segment_tuples osst
+JOIN osm_shipway_clustered osc ON osst.osm_id = osc.osm_id
+GROUP BY segment;
 
--- etldoc: osm_shipway_cluster_coalesced -> osm_shipway_linestring_gen_z12_skeleton
+-- Step 8: Re-combine segments that are part of colinear sections
+-- etldoc: osm_shipway_distinct_segments -> osm_shipway_linestring_gen_z12_skeleton
 CREATE MATERIALIZED VIEW osm_shipway_linestring_gen_z12_skeleton AS
 SELECT
-  geometry,
-  MAX(max_length) AS max_length
-FROM osm_shipway_linestring_parts
-GROUP BY geometry;
+  ST_Union(segment) AS geometry,
+  route_length AS max_length
+FROM osm_shipway_distinct_segments
+GROUP BY route_length;
 
 -- etldoc: osm_shipway_linestring_gen_z12 -> osm_shipway_linestring_gen_z11
 CREATE MATERIALIZED VIEW osm_shipway_linestring_gen_z11 AS
