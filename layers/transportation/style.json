@@ -7832,6 +7832,34 @@
         ]
       ],
       "order": 183
+    },
+    {
+      "id": "traffic-signals-z17",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 16,
+      "layout": {
+        "icon-image": "traffic_light.13",
+        "visibility": "visible",
+        "icon-allow-overlap": false
+      },
+      "paint": {
+        "icon-opacity": 1,
+        "icon-halo-blur": 1,
+        "text-halo-blur": 0.5,
+        "icon-halo-color": "rgba(255, 255, 255, 1)",
+        "icon-halo-width": 0.5,
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 1
+      },
+      "metadata": {},
+      "filter": [
+        "==",
+        "class",
+        "traffic_signals"
+      ],
+      "order": 192
     }
   ]
 }
