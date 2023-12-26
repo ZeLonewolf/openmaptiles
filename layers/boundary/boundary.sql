@@ -742,122 +742,259 @@ UNION ALL
 SELECT geometry, NULL::int, NULL::text, NULL::text, NULL::int, NULL::text, NULL::text, NULL::int, class, name, tags
 FROM (
 
-         -- etldoc: osm_boundary_polygon_gen_z4 -> layer_boundary:z4
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z4 -> layer_boundary:z4
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z4
+         FROM osm_aboriginal_boundary_polygon_gen_z4
          WHERE zoom_level = 4
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z5 -> layer_boundary:z5
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z5 -> layer_boundary:z5
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z5
+         FROM osm_aboriginal_boundary_polygon_gen_z5
          WHERE zoom_level = 5
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z6 -> layer_boundary:z6
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z6 -> layer_boundary:z6
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z6
+         FROM osm_aboriginal_boundary_polygon_gen_z6
          WHERE zoom_level = 6
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z7 -> layer_boundary:z7
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z7 -> layer_boundary:z7
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z7
+         FROM osm_aboriginal_boundary_polygon_gen_z7
          WHERE zoom_level = 7
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z8 -> layer_boundary:z8
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z8 -> layer_boundary:z8
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z8
+         FROM osm_aboriginal_boundary_polygon_gen_z8
          WHERE zoom_level = 8
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z9 -> layer_boundary:z9
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z9 -> layer_boundary:z9
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z9
+         FROM osm_aboriginal_boundary_polygon_gen_z9
          WHERE zoom_level = 9
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z10 -> layer_boundary:z10
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z10 -> layer_boundary:z10
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z10
+         FROM osm_aboriginal_boundary_polygon_gen_z10
          WHERE zoom_level = 10
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z11 -> layer_boundary:z11
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z11 -> layer_boundary:z11
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z11
+         FROM osm_aboriginal_boundary_polygon_gen_z11
          WHERE zoom_level = 11
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z12 -> layer_boundary:z12
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z12 -> layer_boundary:z12
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z12
+         FROM osm_aboriginal_boundary_polygon_gen_z12
          WHERE zoom_level = 12
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon_gen_z13 -> layer_boundary:z13
+         -- etldoc: osm_aboriginal_boundary_polygon_gen_z13 -> layer_boundary:z13
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon_gen_z13
+         FROM osm_aboriginal_boundary_polygon_gen_z13
          WHERE zoom_level = 13
          AND geometry && bbox
 
          UNION ALL
 
-         -- etldoc: osm_boundary_polygon -> layer_boundary:z14
+         -- etldoc: osm_aboriginal_boundary_polygon -> layer_boundary:z14
          SELECT geometry,
                 boundary AS class,
                 name,
                 tags
-         FROM osm_boundary_polygon
+         FROM osm_aboriginal_boundary_polygon
+         WHERE zoom_level = 14
+         AND geometry && bbox
+
+     ) AS area_zoom_levels
+
+UNION ALL
+
+SELECT geometry, admin_level, NULL::text, NULL::text, NULL::int, NULL::text, NULL::text, NULL::int, class, name, tags
+FROM (
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z4 -> layer_boundary:z4
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z4
+         WHERE zoom_level = 4
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z5 -> layer_boundary:z5
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z5
+         WHERE zoom_level = 5
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z6 -> layer_boundary:z6
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z6
+         WHERE zoom_level = 6
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z7 -> layer_boundary:z7
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z7
+         WHERE zoom_level = 7
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z8 -> layer_boundary:z8
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z8
+         WHERE zoom_level = 8
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z9 -> layer_boundary:z9
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z9
+         WHERE zoom_level = 9
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z10 -> layer_boundary:z10
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z10
+         WHERE zoom_level = 10
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z11 -> layer_boundary:z11
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z11
+         WHERE zoom_level = 11
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z12 -> layer_boundary:z12
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z12
+         WHERE zoom_level = 12
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon_gen_z13 -> layer_boundary:z13
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon_gen_z13
+         WHERE zoom_level = 13
+         AND geometry && bbox
+
+         UNION ALL
+
+         -- etldoc: osm_admin_boundary_polygon -> layer_boundary:z14
+         SELECT geometry,
+                admin_level,
+                boundary AS class,
+                name,
+                tags
+         FROM osm_admin_boundary_polygon
          WHERE zoom_level = 14
          AND geometry && bbox
 

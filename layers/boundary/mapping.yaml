@@ -58,9 +58,9 @@ generalized_tables:
     sql_filter: area>power(ZRES11,2)
     tolerance: ZRES12
 
-  # etldoc: osm_aboriginal_boundary_polygon -> osm_aboriginal_boundary_polygon_gen_z13
-  aboriginal_boundary_polygon_gen_z13:
-    source: aboriginal_boundary_polygon
+  # etldoc: osm_admin_boundary_polygon -> osm_admin_boundary_polygon_gen_z13
+  admin_boundary_polygon_gen_z13:
+    source: admin_boundary_polygon
     sql_filter: area>power(ZRES12,2) AND ST_IsValid(geometry)
     tolerance: ZRES13
 
